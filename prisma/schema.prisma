@@ -6,24 +6,53 @@ generator client {
 datasource db {
     provider             = "mysql"
     url                  = env("DATABASE_URL")
-    referentialIntegrity = "prisma"
+    referentialIntegrity= "prisma"
 }
 
-model Product {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    price       Decimal
-    image       String
-    category    Category? @relation(fields: [category_id], references: [id])
-    category_id Int
-
-    @@index([category_id])
+model Vote {
+  id          Int       @id @default(autoincrement())
+  title       String
+  closing_date DateTime
+  vote_total  Int
+  questions   Vote_Question[]
 }
 
-model Category {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    products    Product[]
+model Vote_Question {
+  id          Int       @id @default(autoincrement())
+  name        String
+  vote_id     Int 
+  vote        Vote      @relation(fields: [vote_id], references: [id])
+  options     Vote_Option[]
 }
+
+model Vote_Option {
+  id          Int       @id @default(autoincrement())
+  name        String
+  vote_count  Int
+  question_id  Int 
+  vote_question Vote_Question  @relation(fields: [question_id], references: [id])
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  auth        Int
+  vote_info Vote_Info[]
+  emails      Email[]
+}
+
+model Email {
+  id          Int       @id @default(autoincrement())
+  address     String
+  user_id      Int?
+  user        User?      @relation(fields: [user_id], references: [id])
+}
+
+model Vote_Info {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  vote_id     Int
+  user        User      @relation(fields: [user_id], references: [id])
+}
+
+
+
