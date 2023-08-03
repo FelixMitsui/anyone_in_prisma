@@ -1,13 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
-}
-datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
 }
 
+datasource db {
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity= "prisma"
+}
 
 model Vote {
   id          Int       @id @default(autoincrement())
@@ -53,6 +53,10 @@ model Vote_Info {
   vote_id     Int
   user        User      @relation(fields: [user_id], references: [id])
 }
+
+
+
+
 
 
 
