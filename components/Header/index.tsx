@@ -35,7 +35,7 @@ const Header = () => {
                 const res = await fetch(`${process.env.BASE_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: session?.user?.email })
+                    body: JSON.stringify({ email: session?.user?.email as string })
                 })
 
                 if (res.ok) {

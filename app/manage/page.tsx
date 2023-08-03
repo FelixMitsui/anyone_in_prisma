@@ -54,7 +54,7 @@ export default function Manage() {
       router.push('/manage/votes');
 
       setTimeout(() => {
-        dispatch(cleanMassage({}));
+        dispatch(cleanMassage());
       }, 3000)
     }
   };

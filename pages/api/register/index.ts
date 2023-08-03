@@ -2,18 +2,15 @@ import prisma from '../../../lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
     if (req.method === 'POST') {
         try {
             const user = await prisma.user.create({
                 data: {
+                    auth: 0,
                     emails: {
-                        connectOrCreate: {
-                            where: {
-                                address: req.body.email,
-                            },
-                            create: {
-                                address: req.body.email,
-                            },
+                        create: {
+                            address: req.body.email,
                         },
                     },
                 },

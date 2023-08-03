@@ -8,15 +8,31 @@ type Vote = {
   vote_total: number;
 
 }
-async function getFocusData() {
-  const res = await fetch(`${process.env.BASE_URL}/api/votes?limit=3&target=vote_total&sorted=DESC`, { cache: 'no-store' })
 
-  return res.json();
+async function getFocusData() {
+  const result = await fetch(`${process.env.BASE_URL}/api/votes?limit=3&target=vote_total&sorted=DESC`, { next: { revalidate: 300 } })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error(`votes not found.${res.status}`)
+      }
+    }).catch(err => console.error(err));
+  return result;
+
 }
 
 async function getNewData() {
-  const res = await fetch(`${process.env.BASE_URL}/api/votes?limit=3&target=closing_date&sorted=DESC`, { cache: 'no-store' })
-  return res.json();
+  const result = await fetch(`${process.env.BASE_URL}/api/votes?limit=3&target=closing_date&sorted=DESC`, { next: { revalidate: 300 } })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error(`votes not found.${res.status}`)
+      }
+    }).catch(err => console.error(err));
+  return result;
+
 }
 
 
