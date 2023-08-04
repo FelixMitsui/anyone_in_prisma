@@ -14,7 +14,7 @@ export default function RootLayout({
     const managePath = useMatch('/manage');
     const votesPath = useMatch('/manage/votes');
 
-    const [focusBtn, setFocusBtn] = useState<{ create: boolean, votes: boolean }>();
+    const [focusBtn, setFocusBtn] = useState<{ create: boolean, votes: boolean }>({ create: true, votes: false });
 
     useEffect(() => {
         if (managePath) {

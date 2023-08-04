@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, Suspense } from "react";
 import { Formik, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import { RootState } from "@/redux/store";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getVote, setMassage, cleanMassage } from "@/redux/features/vote";
 import { sendVote } from "@/redux/features/user";
-import ErrorPage from "@/app/error";
+
 type Vote = {
     id?: number;
     title?: string;
@@ -122,55 +122,75 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
 
     return (
         <>
-            <h1 className="font-bold text-3xl my-2">{vote.title}</h1>
-            <Formik initialValues={initialValues} validationSchema={voteSchema} onSubmit={handleVoteForm}>{({ handleSubmit }) => (
-                <form className="flex flex-col " onSubmit={handleSubmit}>
-                    <div>
-                        {
-                            vote.questions?.map((item, questionIndex) => {
-                                const { id, name, options } = item;
-                                const totalVote = options.reduce((total, current) => total + current.vote_count, 0);
-                                const voteRatio = 100 / totalVote;
-                                return (
-                                    <div key={id} className="shadow-md p-5 px-10 my-4">
-                                        <h2 className="font-bold text-2xl mb-2">{name}</h2>
-
-                                        {options.map((item, optionIndex) => {
-
-                                            const { id, name, vote_count } = item;
-
-                                            return (
-                                                <div key={id} className="flex my-5 ">
-                                                    {isVoted || status != "authenticated" ?
-                                                        <>
-                                                            <p className="ml-1  text-xl">{name}</p>
-                                                            <p className="mx-2 text-xl text-sky-600">{vote_count}</p>
-                                                            <div style={{ "width": `${vote_count * voteRatio}%` }} className=" ml-2 text-xl bg-amber-400 flex self-center justify-center">{Math.round(vote_count * voteRatio)}%</div>
-                                                        </> :
-                                                        <div className="flex flex-col">
-                                                            <div className="">
-                                                                <Field name={`questions[${questionIndex}].option`}>{({ field }: FieldProps) =>
-                                                                (<input
-                                                                    type="radio"
-                                                                    id={id.toString()}
-                                                                    {...field}
-                                                                    value={id}
-                                                                />)}
-                                                                </Field>
-                                                                <label htmlFor={id.toString()} className="ml-1 text-xl">{name}</label>
-                                                            </div>
-                                                            <ErrorMessage name={`questions[${questionIndex}].option`}>{(msg: string) => (<p className="font-bold text-xl text-red-500 mx-2 mb-2 text-center ">{msg}</p>)}</ErrorMessage>
-                                                        </div>}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                );
-                            })}
+            {vote.questions ?
+                <>
+                    <h1 className="mb-2 bg-slate-400 w-96 h-12 "></h1>
+                    <div className="p-3 w-96 h-full">
+                        {[0, 1].map(item => (
+                            <div key={item} className="p-3 mb-3 bg-slate-300 w-full h-full flex flex-col justify-center">
+                                <h1 className=" bg-slate-400  w-full h-12"></h1>
+                                <div className="my-3 bg-slate-400  w-full h-8"></div>
+                                <div className="my-3 bg-slate-400  w-full h-8"></div>
+                                <div className="my-3 bg-slate-400  w-full h-8"></div>
+                            </div>
+                        ))}
                     </div>
-                    {isVoted || status != "authenticated" ? null : <button type="submit" className="text-xl font-btn p-1 my-2 self-end rounded-md bg-orange-300">Submit</button>}
-                </form>
-            )}</Formik>
+                </> :
+                <>
+                    <h1 className="font-bold text-3xl my-2">{vote.title}</h1>
+                    <Formik initialValues={initialValues} validationSchema={voteSchema} onSubmit={handleVoteForm}>{({ handleSubmit }) => (
+                        <form className="flex flex-col " onSubmit={handleSubmit}>
+                            <div>
+                                {
+                                    vote.questions?.map((item, questionIndex) => {
+                                        const { id, name, options } = item;
+                                        const totalVote = options.reduce((total, current) => total + current.vote_count, 0);
+                                        const voteRatio = 100 / totalVote;
+                                        return (
+                                            <div key={id} className="shadow-md p-5 px-10 my-4">
+                                                <h2 className="font-bold text-2xl mb-2">{name}</h2>
+
+                                                {options.map((item, optionIndex) => {
+
+                                                    const { id, name, vote_count } = item;
+
+                                                    return (
+                                                        <div key={id} className="flex my-5 ">
+                                                            {isVoted || status != "authenticated" ?
+                                                                <>
+                                                                    <p className="ml-1  text-xl">{name}</p>
+                                                                    <p className="mx-2 text-xl text-sky-600">{vote_count}</p>
+                                                                    <div style={{ "width": `${vote_count * voteRatio}%` }} className=" ml-2 text-xl bg-amber-400 flex self-center justify-center">{Math.round(vote_count * voteRatio)}%</div>
+                                                                </> :
+                                                                <div className="flex flex-col">
+                                                                    <div className="">
+                                                                        <Field name={`questions[${questionIndex}].option`}>{({ field }: FieldProps) =>
+                                                                        (<input
+                                                                            type="radio"
+                                                                            id={id.toString()}
+                                                                            {...field}
+                                                                            value={id}
+                                                                        />)}
+                                                                        </Field>
+                                                                        <label htmlFor={id.toString()} className="ml-1 text-xl">{name}</label>
+                                                                    </div>
+                                                                    <ErrorMessage name={`questions[${questionIndex}].option`}>{(msg: string) => (<p className="font-bold text-xl text-red-500 mx-2 mb-2 text-center ">{msg}</p>)}</ErrorMessage>
+                                                                </div>}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    })}
+                            </div>
+                            {isVoted || status != "authenticated" ? null : <button type="submit" className="text-xl font-btn p-1 my-2 self-end rounded-md bg-orange-300">Submit</button>}
+                        </form>
+                    )}</Formik>
+                </>
+            }
+
+
+
         </>
     )
 }

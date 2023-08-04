@@ -2,7 +2,7 @@
 module.exports = {
   reactStrictMode: true,
   env: {
-    BASE_URL: `${process.env.MODE === 'production' ? 'https://anyone-in-prisma.vercel.app' : 'https://anyone-in-prisma.vercel.app'}`
+    BASE_URL: `${process.env.MODE === 'production' ? 'https://anyone-in-prisma.vercel.app' : 'http://localhost:3000'}`
   },
   experimental: {
     appDir: true,
