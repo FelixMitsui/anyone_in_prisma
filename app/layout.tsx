@@ -30,7 +30,7 @@ export default function RootLayout({
                 <ReduxProvider>
                     <Header />
                     <MassageModal />
-                    <main className="py-24 px-8 min-h-screen flex flex-col items-center">
+                    <main className="py-24 px-8 min-h-screen  flex flex-col items-center justify-center">
                         {children}
                     </main>
                 </ReduxProvider>

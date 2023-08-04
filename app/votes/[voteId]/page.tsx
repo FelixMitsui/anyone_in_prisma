@@ -122,16 +122,16 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
 
     return (
         <>
-            {vote.questions ?
+            {!vote.questions ?
                 <>
                     <h1 className="mb-2 bg-slate-400 w-96 h-12 "></h1>
-                    <div className="p-3 w-96 h-full">
+                    <div className="p-3 w-2/4 h-full flex flex-col">
                         {[0, 1].map(item => (
-                            <div key={item} className="p-3 mb-3 bg-slate-300 w-full h-full flex flex-col justify-center">
-                                <h1 className=" bg-slate-400  w-full h-12"></h1>
+                            <div key={item} className="p-3 mb-3 bg-slate-300 h-full flex flex-col justify-center">
+                                <h1 className=" bg-slate-400  w-2/4 h-12 self-center"></h1>
                                 <div className="my-3 bg-slate-400  w-full h-8"></div>
-                                <div className="my-3 bg-slate-400  w-full h-8"></div>
-                                <div className="my-3 bg-slate-400  w-full h-8"></div>
+                                <div className="my-3 bg-slate-400 w-full h-8"></div>
+                                <div className="my-3 bg-slate-400 w-full h-8"></div>
                             </div>
                         ))}
                     </div>
@@ -139,7 +139,7 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
                 <>
                     <h1 className="font-bold text-3xl my-2">{vote.title}</h1>
                     <Formik initialValues={initialValues} validationSchema={voteSchema} onSubmit={handleVoteForm}>{({ handleSubmit }) => (
-                        <form className="flex flex-col " onSubmit={handleSubmit}>
+                        <form className="flex flex-col w-2/4 " onSubmit={handleSubmit}>
                             <div>
                                 {
                                     vote.questions?.map((item, questionIndex) => {
@@ -147,8 +147,8 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
                                         const totalVote = options.reduce((total, current) => total + current.vote_count, 0);
                                         const voteRatio = 100 / totalVote;
                                         return (
-                                            <div key={id} className="shadow-md p-5 px-10 my-4">
-                                                <h2 className="font-bold text-2xl mb-2">{name}</h2>
+                                            <div key={id} className="shadow-md p-5  my-4 ">
+                                                <h2 className="font-bold text-2xl mb-2 ">{name}</h2>
 
                                                 {options.map((item, optionIndex) => {
 
