@@ -47,7 +47,7 @@ const Votes = () => {
     }
     fetchData();
 
-  }, [])
+  }, [dispatch])
 
   const handleConfirmModal = (voteId: number) => {
     voteIdRef.current = voteId;

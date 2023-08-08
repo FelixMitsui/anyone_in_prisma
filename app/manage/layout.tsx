@@ -22,7 +22,7 @@ export default function RootLayout({
         } else if (votesPath) {
             setFocusBtn({ create: false, votes: true });
         }
-    }, [])
+    }, [managePath,votesPath])
 
     return (
         <div className="min-w-full flex flex-col">

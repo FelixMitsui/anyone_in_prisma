@@ -10,7 +10,7 @@ export const store = configureStore({
     userReducer
   },
   middleware: [thunk, logger],
-  devTools: process.env.MODE !== "production",
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 export type RootState = ReturnType<typeof store.getState>;

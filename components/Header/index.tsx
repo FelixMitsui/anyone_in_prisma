@@ -15,7 +15,7 @@ const Header = () => {
     const canvasRef = useRef<HTMLDivElement>(null);
 
     const dispatch = useDispatch<AppDispatch>();
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     const handleToggleCanvas = (event: MouseEvent | React.MouseEvent): void => {
         event.stopPropagation();
@@ -25,7 +25,6 @@ const Header = () => {
             isToggleCanvas || userCurrent?.contains(event.target as Node) &&
             !canvasRef.current?.contains(event.target as Node)) {
             setIsToggleCanvas((prev: boolean) => !prev);
-            console.log("有執行嗎");
         }
 
     };
@@ -72,6 +71,7 @@ const Header = () => {
         handleSignIn();
     }, [session, auth, dispatch]);
 
+   
     useEffect(() => {
 
         document.addEventListener('click', handleToggleCanvas);
@@ -80,7 +80,8 @@ const Header = () => {
 
             document.removeEventListener('click', handleToggleCanvas);
         }
-    }, []);
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isToggleCanvas]);
 
     return (
         <>
@@ -90,7 +91,7 @@ const Header = () => {
                     <ul className="font-nav text-2xl text-slate-300">
                         <li><Link href="/votes" className="">Votes</Link></li>
                     </ul></nav>
-                <div data-testid="userCanvas" className="relative  flex rounded bg-slate-300 m-3 p-2 col-start-3 justify-self-end" onClick={(event) => handleToggleCanvas(event)} ref={userRef} >
+                <div data-testid="userCanvas" className="relative  flex rounded bg-slate-300 m-3 p-2 col-start-3 justify-self-end"  ref={userRef} >
 
                     {isToggleCanvas &&
                         <>
@@ -103,12 +104,12 @@ const Header = () => {
                                 <ul className="p-3 whitespace-nowrap">
                                     {auth & 1 ? <li><i className="bx bxs-edit-alt text-xl"></i><Link href={`/manage`} className="text-2xl font-bold">manage</Link></li> : null}
                                 </ul>
-                                {/* <SignModal /> */}
+                                <SignModal />
                             </div>
                         </>
                     }
 
-                    <i className="text-xl bx bxs-user" ></i>
+                    <button type="button"  className="px-0.5" onClick={(event) => handleToggleCanvas(event)}><i className="text-xl bx bxs-user "></i></button>
                 </div>
             </div>
         </>

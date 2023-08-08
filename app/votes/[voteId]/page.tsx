@@ -118,7 +118,7 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
         }
         fetchVote();
 
-    }, [vote_info])
+    }, [params.voteId, dispatch])
 
     return (
         <>

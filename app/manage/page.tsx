@@ -63,7 +63,7 @@ export default function Manage() {
     if (!(auth && auth & 1)) {
       router.push('/');
     }
-  }, [auth])
+  }, [auth,router])
 
   return (
 
