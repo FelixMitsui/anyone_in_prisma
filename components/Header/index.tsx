@@ -18,15 +18,18 @@ const Header = () => {
     const { data: session, status } = useSession();
 
     const handleToggleCanvas = (event: MouseEvent | React.MouseEvent): void => {
-
+        event.stopPropagation();
         const userCurrent = userRef.current;
 
         if (!userCurrent?.contains(event.target as Node) &&
             isToggleCanvas || userCurrent?.contains(event.target as Node) &&
             !canvasRef.current?.contains(event.target as Node)) {
             setIsToggleCanvas((prev: boolean) => !prev);
+            console.log("有執行嗎");
         }
+
     };
+
     useEffect(() => {
 
         if (!session) return;
@@ -71,36 +74,40 @@ const Header = () => {
 
     useEffect(() => {
 
-        window.document.addEventListener('click', handleToggleCanvas);
+        document.addEventListener('click', handleToggleCanvas);
 
         return () => {
 
-            window.document.removeEventListener('click', handleToggleCanvas);
+            document.removeEventListener('click', handleToggleCanvas);
         }
-    }, [isToggleCanvas]);
+    }, []);
 
     return (
         <>
-            <div className=" z-50 fixed left-0 right-0 bg-rose-500 grid grid-cols-3 items-center justify-items-center">
+            <div data-testid="headerWrapper" className=" z-50 fixed left-0 right-0 bg-rose-500 grid grid-cols-3 items-center justify-items-center">
                 <div><h1 className="mx-2 font-title text-3xl text-red-200"><Link href="/">ANYONE VOTE</Link></h1></div>
                 <nav className="col-start-2 p-1 mx-2">
                     <ul className="font-nav text-2xl text-slate-300">
                         <li><Link href="/votes" className="">Votes</Link></li>
                     </ul></nav>
-                <div className="relative  flex rounded bg-slate-300 m-3 p-2 col-start-3 justify-self-end" onClick={(event) => handleToggleCanvas(event)} ref={userRef} >
+                <div data-testid="userCanvas" className="relative  flex rounded bg-slate-300 m-3 p-2 col-start-3 justify-self-end" onClick={(event) => handleToggleCanvas(event)} ref={userRef} >
 
                     {isToggleCanvas &&
-                        <div className="w-max absolute top-10 right-0.5 bg-slate-300 p-3 flex flex-col items-center" ref={canvasRef} >
-                            {user_id && <>
-                                <p className="text-xl font-bold">ID :<span className="m-2 text-sky-600">{user_id}</span></p>
-                                <p className="text-xl font-bold">Email :<span className="m-2 text-sky-600">{emails[0].address}</span></p>
-                            </>}
-                            <hr className="h-1 w-full border-black" />
-                            <ul className="p-3 whitespace-nowrap">
-                                {auth & 1 ? <li><i className="bx bxs-edit-alt text-xl"></i><Link href={`/manage`} className="text-2xl font-bold">manage</Link></li> : null}
-                            </ul>
-                            <SignModal />
-                        </div>}
+                        <>
+                            <div data-testid="userModal" className="w-max absolute top-10 right-0.5 bg-slate-300 p-3 flex flex-col items-center" ref={canvasRef} >
+                                {user_id && <>
+                                    <p className="text-xl font-bold">ID :<span className="m-2 text-sky-600">{user_id}</span></p>
+                                    <p className="text-xl font-bold">Email :<span className="m-2 text-sky-600">{emails[0].address}</span></p>
+                                </>}
+                                <hr className="h-1 w-full border-black" />
+                                <ul className="p-3 whitespace-nowrap">
+                                    {auth & 1 ? <li><i className="bx bxs-edit-alt text-xl"></i><Link href={`/manage`} className="text-2xl font-bold">manage</Link></li> : null}
+                                </ul>
+                                {/* <SignModal /> */}
+                            </div>
+                        </>
+                    }
+
                     <i className="text-xl bx bxs-user" ></i>
                 </div>
             </div>

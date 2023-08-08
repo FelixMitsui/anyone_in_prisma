@@ -63,7 +63,7 @@ export default function Manage() {
     if (!(auth && auth & 1)) {
       router.push('/');
     }
-  }, [auth, router])
+  }, [auth])
 
   return (
 
@@ -77,7 +77,7 @@ export default function Manage() {
             {({ field }: FieldProps) => (
               <div className="flex flex-col mb-3 w-full">
                 <p className="font-bold text-2xl me-2 mb-2 text-center">Title</p>
-                <input type="text" className="p-1 w-full self-center bg-slate-300" {...field} />
+                <input data-testid="titleInput" type="text" className="p-1 w-full self-center bg-slate-300" {...field} />
               </div>
             )}
           </Field>
@@ -89,7 +89,7 @@ export default function Manage() {
                   <div key={questionIndex} className="flex flex-col mb-3 w-full">
                     <p className="font-bold text-2xl me-2 mb-2 text-center"> {questionIndex + 1}. Question</p>
                     <div className="flex justify-center">
-                      <Field name={`questions[${questionIndex}].name`} as={inputField} />
+                      <Field data-testid="questionInput" name={`questions[${questionIndex}].name`} as={inputField} />
                       <button type="button" className="font-btn p-1 my-2 ms-2 rounded-md self-center border-2 border-slate-500 bg-red-400" onClick={() => {
                         if (values.questions.length === 1) return;
                         remove(questionIndex)
@@ -106,7 +106,7 @@ export default function Manage() {
                               <p className="font-bold text-2xl me-2 mb-2 text-center ">{optionIndex + 1}. Option</p>
 
                               <div className="flex justify-center">
-                                <Field name={`questions[${questionIndex}].options[${optionIndex}]`} as={inputField} />
+                                <Field data-testid="optionInput" name={`questions[${questionIndex}].options[${optionIndex}]`} as={inputField} />
                                 <button type="button" className="font-btn p-1 my-2 ms-2 self-center rounded-md border-2 border-slate-500 bg-red-400" onClick={() => {
                                   if (question.options.length === 1) return;
                                   remove(optionIndex)

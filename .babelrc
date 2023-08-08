@@ -1,0 +1,15 @@
+{
+    "presets": [
+        "next/babel"
+    ],
+    "plugins": [
+        [
+            "jsx-remove-attributes",
+            {
+                "attributes": [
+                    "role"
+                ]
+            }
+        ]
+    ]
+}

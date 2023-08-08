@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useEffect, Suspense } from "react";
+import React, { FC, useEffect } from "react";
 import { Formik, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import { RootState } from "@/redux/store";
