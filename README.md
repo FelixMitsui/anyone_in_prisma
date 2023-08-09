@@ -9,6 +9,11 @@
 資料庫操作的部分，使用prisma，優勢在於請求資料的網域就是客戶端本身。
 prisma提供類似mongoDB的方法，方便操作資料。
 
+#Tailwind Css
+
+樣式屬性值的選擇比Bootstrap更多，命名也較為簡潔。
+tailwind config 方便客製化自訂樣式。
+
 #功能部分
 
 Google登入。
