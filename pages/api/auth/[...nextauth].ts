@@ -7,7 +7,7 @@ export default NextAuth({
             clientId: '278287770009-p6ssovcjip1037fla3ep5fgbtrn1e2j2.apps.googleusercontent.com',
             clientSecret: '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'
         })],
-        secret:process.env.GOOGLE_SECRET, 
+        secret:process.env.NEXTAUTH_SECRET, 
     // callbacks: {
     
     // }
