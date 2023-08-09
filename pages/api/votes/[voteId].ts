@@ -1,15 +1,15 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
 import prisma from '../../../lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function votes(req: NextApiRequest, res: NextApiResponse) {
+export default async function vote(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
 
         case 'GET':
             try {
                 const voteId = req.query.voteId;
-                const data = await prisma.vote.findFirst({
+                const vote = await prisma.vote.findFirst({
                     where: {
                         id: Number(voteId),
                     },
@@ -22,23 +22,23 @@ export default async function votes(req: NextApiRequest, res: NextApiResponse) {
                     },
                 });
 
-                if (data) {
-                    return res.status(200).json(data);
+                if (vote) {
+                    return res.status(200).json({message:'',vote:vote});
                 } else {
-                    return res.status(404).send('Vote not found.');
+                    return res.status(404).json({message:'Not found.'});
                 }
             }
             catch (err) {
-                return res.status(500).send('Something went wrong.');
+                return res.status(500).json({message:err});
             } finally {
                 await prisma.$disconnect();
-                break;
             }
+
         case 'PATCH':
             try {
                 const voteId = req.query.voteId;
                 const { userId, questions } = req.body;
-                console.log(questions)
+    
                 const [updatedVote, updatedOptions] = await Promise.all([
 
                     prisma.vote.update({
@@ -75,19 +75,17 @@ export default async function votes(req: NextApiRequest, res: NextApiResponse) {
                     },
                 });
                 if (updatedVote && updatedOptions && voteInfo) {
-
-                    return res.status(200).json({ message: 'Voted completed.', vote_id: voteInfo.vote_id });
+                    return res.status(200).json({ message: 'Voted completed.', voteId: voteInfo.vote_id });
                 } else {
                     return res.status(404).json({ message: 'Voted failed.' });
                 }
             } catch (err) {
-                return res.status(500).send('Something went wrong');
+                return res.status(500).json({ message:err });
             } finally {
                 await prisma.$disconnect();
-                break;
             }
 
         default:
-            break;
-    };
-};
+            return res.status(404).json({ message: 'not found.'});
+    }
+}

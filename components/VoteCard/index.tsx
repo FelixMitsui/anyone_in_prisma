@@ -34,8 +34,6 @@ const VoteCard: FC<VoteCardProps> = ({ vote, vote_info, status }) => {
     const remainingHours = Math.floor((remainingSeconds % (24 * 60 * 60)) / (60 * 60));
     const remainingMinutes = Math.floor((remainingSeconds % (60 * 60)) / 60);
 
-    console.log(remainingDays, ':', remainingHours, ':', remainingMinutes);
-
     return (
         <article className="p-5 me-3 pb-2 bg-slate-200 shadow-md flex flex-col">
             <h2 className="text-2xl font-bold">{title}</h2>

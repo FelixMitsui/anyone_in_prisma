@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 const SignModal = () => {
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [showSignModal, setShowSignModal] = useState<boolean>(false);
     const router = useRouter();
 

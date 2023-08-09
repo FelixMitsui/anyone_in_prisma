@@ -2,7 +2,7 @@
 import React, { useEffect, useState, memo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/redux/store";
-import { getAllVotes, deleteVote, setMassage, cleanMassage } from '@/redux/features/vote';
+import { getAllVotes, deleteVote, cleanMassage } from '@/redux/features/vote';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 const ConfirmModal = dynamic(() => import('@/components/ConfirmModal'));
@@ -76,8 +76,7 @@ const Votes = () => {
       })
 
     if (result) {
-      dispatch(setMassage(result));
-      dispatch(deleteVote(voteIdRef.current));
+      dispatch(deleteVote({voteId:voteIdRef.current,message: result }));
 
       setTimeout(() => {
         dispatch(cleanMassage());

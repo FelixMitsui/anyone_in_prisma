@@ -101,7 +101,7 @@ export default function Manage() {
                     <FieldArray name={`questions[${questionIndex}].options`}>
                       {({ push, remove }: ArrayHelpers) => (
                         <>
-                          {question.options.map((option, optionIndex) => (
+                          {question.options.map((_,optionIndex) => (
                             <div key={optionIndex} className="flex flex-col mb-3 w-full">
                               <p className="font-bold text-2xl me-2 mb-2 text-center ">{optionIndex + 1}. Option</p>
 
@@ -145,6 +145,6 @@ export default function Manage() {
   );
 }
 
-const inputField: React.FC<any> = ({ field, form, ...props }) => (
+const inputField: React.FC<any> = ({ field,...props }) => (
   <input {...field} {...props} className="p-1 self-center w-full bg-slate-300" />
 );

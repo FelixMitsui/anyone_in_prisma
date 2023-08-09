@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Manage from "@/app/manage/page";
 import { Provider } from 'react-redux';
 import { SessionProvider } from 'next-auth/react';
@@ -95,9 +95,10 @@ describe("Manage page", () => {
             </SessionProvider>
 
         );
+
         const title = screen.getByText('Title');
         expect(title).toBeInTheDocument();
-        screen.debug(title)
+
     });
 
     test('Clicking the Add Question button and the Add Option button should display input elements.', async () => {
@@ -110,21 +111,19 @@ describe("Manage page", () => {
             </SessionProvider>
 
         );
-        const option = screen.getByText('Add option');
 
-        act(() =>
+        const option = screen.getByText('Add option');
+        
             fireEvent.click(option)
-        )
-        const newOption = screen.getByText(/2. Option/);
-        screen.debug(newOption)
+        
+        const newOption =await screen.getByText(/2. Option/);
         expect(newOption).toBeInTheDocument();
 
         const question = screen.getByText('Add question');
 
-        act(() =>
             fireEvent.click(question)
-        );
-        const newQuestion = screen.getByText(/2. Question/);
+       
+        const newQuestion =await screen.getByText(/2. Question/);
 
         expect(newQuestion).toBeInTheDocument();
 
@@ -149,9 +148,8 @@ describe("Manage page", () => {
 
         const submit = screen.getByText('Submit');
 
-        act(() =>
             fireEvent.click(submit)
-        )
+
         await waitFor(() => {
             expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/manage'), {
                 method: 'POST',

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { logIn } from "@/redux/features/user";
+import  { logIn,register,cleanUserMassage } from "@/redux/features/user";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from "@/redux/store";
 import SignModal from "../SignModal";
@@ -31,20 +31,20 @@ const Header = () => {
 
     useEffect(() => {
 
-        if (!session) return;
+        if (!session||user_id) return;
         const handleSignIn = async () => {
             try {
-                const res = await fetch(`${process.env.BASE_URL}/api/login`, {
+                const res:Response = await fetch(`${process.env.BASE_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: session?.user?.email as string })
                 })
 
                 if (res.ok) {
-                    const { id, auth, emails, vote_info } = await res.json();
-                    dispatch(logIn({ id, auth, emails, vote_info }));
-
+                   const user= await res.json()
+                    dispatch(logIn(user));
                 } else {
+
                     try {
                         const res = await fetch(`${process.env.BASE_URL}/api/register`, {
                             method: 'POST',
@@ -53,18 +53,22 @@ const Header = () => {
                         });
 
                         if (res.ok) {
-                            const { id, emails, vote_info } = await res.json();
-                            dispatch(logIn({ id, auth, emails, vote_info }));
+                            const result= await res.json()
+                            dispatch(register(result));
+
+                            setTimeout(() => {
+                                dispatch(cleanUserMassage());
+                            }, 3000)
                         } else {
-                            console.log('Failed to register');
+                            throw new Error(`'Failed to register.'(${res.status})`);
                         }
-                    } catch (error) {
-                        console.error(error);
+                    } catch (err) {
+                        console.error(err);
                     }
                 }
             }
-            catch (error) {
-                console.error(error);
+            catch (err) {
+                console.error(err);
                 return false;
             }
         }

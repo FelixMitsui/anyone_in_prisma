@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
 import prisma from '../../../lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -46,25 +46,24 @@ export default async function manage(req: NextApiRequest, res: NextApiResponse) 
                     },
                 });
                 if (vote) {
-                    console.log(vote)
                     return res.status(200).json({ message: 'Created successfully.', vote: vote });
                 }
             } catch (err) {
-                return res.status(500).json({ message: 'Something went wrong.' });
+                return res.status(500).json({ message: err });
             } finally {
                 await prisma.$disconnect();
             }
             break;
 
         default:
-            break;
-    };
+            return res.status(400).json({ message: 'Invalid request method.'});
+    }
 
-};
+}
 
 async function getAllVotes(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const data = await prisma.vote.findMany({
+        const votes = await prisma.vote.findMany({
             include: {
                 questions: {
                     select: {
@@ -81,19 +80,18 @@ async function getAllVotes(req: NextApiRequest, res: NextApiResponse) {
             }
         })
 
-        if (data) {
-            return res.status(200).json(data);
+        if (votes) {
+            return res.status(200).json({message:'',votes:votes});
         } else {
-            return res.status(404).send('Vote not found.');
+            return res.status(404).json({message:'Vote not found.'});
         }
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({ msg: 'Something went wrong' })
-
+        return res.status(500).json({ message: err });
     }
-};
+}
 
 async function getFilteredVotes(req: NextApiRequest, res: NextApiResponse) {
+
     const { limit, target, sorted } = req.query;
 
     try {
@@ -107,12 +105,17 @@ async function getFilteredVotes(req: NextApiRequest, res: NextApiResponse) {
                 [target as string]: parsedSorted === 'ASC' ? 'asc' : 'desc',
             },
         });
-
-        return res.status(200).json(votes);
+        if (votes) {
+      return res.status(200).json({ message: '', votes:votes});
+        } else {
+            return res.status(404).json({ message: 'Not found.'});
+}
+      
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ msg: 'Something went wrong' });
+        return res.status(500).json({ message: err });
+    }finally {
+        await prisma.$disconnect();
     }
-};
+}
 
 

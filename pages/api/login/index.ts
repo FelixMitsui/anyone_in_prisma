@@ -2,6 +2,7 @@ import prisma from '../../../lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
     if (req.method === 'POST') {
 
         try {
@@ -26,14 +27,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 },
             });
-
-            return res.status(200).json(user)
+            if (user) {
+                return res.status(200).json(user);
+            } else {
+                return res.status(404).json({ message: 'Not found.'});
+}
         } catch (err) {
-            console.error(err)
-            return res.status(500).json({ msg: 'Something went wrong' })
-
+            return res.status(500).json({ message: err });
+        }finally {
+            await prisma.$disconnect();
         }
-
-    };
-
+    }
 }

@@ -37,24 +37,18 @@ export const vote = createSlice({
                 message: ""
             };
         },
-        setMassage: (state, action: PayloadAction<string>) => {
-            return {
-                ...state,
-                message: action.payload
-            };
-        },
-        getVote: (state, action: PayloadAction<Vote>) => {
-
+        getVote: (state, action: PayloadAction<{message:string, vote:Vote }>) => {
+            const { vote,message} = action.payload;
             const cloneState = [...state.votes];
-            const currentIndex = cloneState.findIndex((vote) => vote.id === action.payload.id);
+            const currentIndex = cloneState.findIndex((state) => state.id ===vote.id);
 
             if (currentIndex !== -1) {
-                cloneState[currentIndex] = action.payload;
+                cloneState[currentIndex] = vote;
             } else {
-                cloneState.push(action.payload);
+                cloneState.push(vote);
             }
             return {
-                ...state,
+                message:message,
                 votes: cloneState,
             }
         },
@@ -84,7 +78,7 @@ export const vote = createSlice({
 
             if (currentIndex !== -1) {
                 cloneState[currentIndex] = vote;
-            };
+            }
 
             return {
                 ...state,
@@ -92,17 +86,17 @@ export const vote = createSlice({
                 votes: cloneState,
             }
         },
-
-        deleteVote: (state, action: PayloadAction<number>) => {
+        deleteVote: (state, action: PayloadAction<{ voteId: number, message: string }>) => {
+            const { voteId,message} = action.payload;
             const cloneState = [...state.votes];
-            const currentIndex = cloneState.findIndex((vote) => vote.id === action.payload);
+            const currentIndex = cloneState.findIndex((state) => state.id === voteId);
 
             if (currentIndex !== -1) {
                 cloneState.splice(currentIndex, 1);
-            };
+            }
 
             return {
-                ...state,
+                message:message,
                 votes: cloneState
             }
         }
@@ -110,5 +104,5 @@ export const vote = createSlice({
 }
 );
 
-export const { cleanMassage, setMassage, getAllVotes, getVote, deleteVote, updateVote, createVote } = vote.actions;
+export const { cleanMassage, getAllVotes, getVote, deleteVote, updateVote, createVote } = vote.actions;
 export default vote.reducer;

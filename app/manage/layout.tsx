@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import Link from 'next/link';
 import '@/globals.css';
 import { useMatch } from 'react-router-dom';

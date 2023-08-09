@@ -8,7 +8,7 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
         case 'GET':
             try {
                 const voteId = req.query.voteId;
-                const data = await prisma.vote.findFirst({
+                const vote = await prisma.vote.findFirst({
                     where: {
                         id: Number(voteId),
                     },
@@ -21,18 +21,18 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
                     },
                 });
 
-                if (data) {
-                    return res.status(200).json(data);
+                if (vote) {
+                    return res.status(200).json({message:'',vote:vote});
                 } else {
-                    return res.status(404).send('Vote not found.');
+                    return res.status(404).json({ message: 'Vote not found.'});
                 }
             }
             catch (err) {
-                return res.status(500).send('Something went wrong.');
+                return res.status(500).json({ message:err});
             } finally {
                 await prisma.$disconnect();
-                break;
             }
+        
         case 'PATCH':
             try {
                 const voteId = req.query.voteId;
@@ -53,9 +53,7 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
                                             create: {
                                                 name: option.name,
                                                 vote_count: 0,
-
                                             },
-
                                         })),
                                     },
                                 },
@@ -75,20 +73,20 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
                 });
 
                 if (updatedVote) {
-                    console.log("updatedVote " + updatedVote)
                     return res.status(200).json({ message: 'Vote updated.', vote: updatedVote });
+                } else {
+                    return res.status(404).json({ message: 'Not found.'});
                 }
 
             } catch (err) {
-                return res.status(500).send('Something went wrong');
+                return res.status(500).json({ message:err});
             } finally {
                 await prisma.$disconnect();
-                break;
             }
 
         case 'DELETE':
-            try {
 
+            try {
                 const voteId = Number(req.query.voteId);
 
                 const questionsId = await prisma.vote_Question.findMany({
@@ -102,7 +100,7 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
 
                 const questionIdArray = questionsId.map((question) => question.id);
 
-                const option = await prisma.vote_Option.deleteMany({
+                await prisma.vote_Option.deleteMany({
                     where: {
                         question_id: {
                             in: questionIdArray,
@@ -110,7 +108,7 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
                     },
                 });
 
-                const question = await prisma.vote_Question.deleteMany({
+                await prisma.vote_Question.deleteMany({
                     where: {
                         vote_id: Number(voteId),
                     }
@@ -136,21 +134,19 @@ export default async function manageVote(req: NextApiRequest, res: NextApiRespon
                     },
                 });
                 if (vote) {
-                    console.log('its ok')
                     return res.status(200).send('Vote deleted.');
                 } else {
                     return res.status(404).send('Vote not found.');
                 }
             }
             catch (err) {
-                return res.status(500).send('Something went wrong.');
+                return res.status(500).send(err);
             } finally {
                 await prisma.$disconnect();
-                break;
             }
+          
         default:
-            break;
+            return res.status(400).json({ message: 'Invalid request method.'});
+    }
 
-    };
-
-};
+}

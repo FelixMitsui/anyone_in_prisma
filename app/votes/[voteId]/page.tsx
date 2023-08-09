@@ -5,10 +5,9 @@ import { Formik, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import { RootState } from "@/redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { getVote, setMassage, cleanMassage } from "@/redux/features/vote";
-import { sendVote } from "@/redux/features/user";
+import { getVote} from "@/redux/features/vote";
+import { sendVote, cleanUserMassage} from "@/redux/features/user";
 
 type Vote = {
     id?: number;
@@ -50,9 +49,8 @@ const voteSchema = Yup.object().shape({
 });
 
 
-const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
+const VotesPage: FC<{ params: { voteId: string } }> = ({ params }) => {
 
-    const router = useRouter();
     const dispatch = useDispatch();
     const { status } = useSession();
     const { id: userId, vote_info } = useSelector((state: RootState) => state.userReducer.value)
@@ -76,7 +74,7 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
             userId
         }
 
-        const vote = await fetch(`${process.env.BASE_URL}/api/votes/${params.voteId}`,
+        const result = await fetch(`${process.env.BASE_URL}/api/votes/${params.voteId}`,
             {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updateInfo),
@@ -91,11 +89,11 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
             })
             .catch((err) => console.error(err));
 
-        if (vote) {
-            dispatch(sendVote({ vote_id: vote.vote_id }));
-            dispatch(setMassage(vote.message));
+        if (result) {
+            dispatch(sendVote(result));
+            
             setTimeout(() => {
-                dispatch(cleanMassage());
+                dispatch(cleanUserMassage());
             }, 3000)
         }
 
@@ -112,13 +110,12 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
                     }
                 }).catch(err => console.error(err));
             if (vote) {
-
                 dispatch(getVote(vote));
             }
         }
         fetchVote();
 
-    }, [params.voteId, dispatch])
+    }, [params.voteId,isVoted, dispatch])
 
     return (
         <>
@@ -150,7 +147,7 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
                                             <div key={id} className="shadow-md p-5  my-4 ">
                                                 <h2 className="font-bold text-2xl mb-2 ">{name}</h2>
 
-                                                {options.map((item, optionIndex) => {
+                                                {options.map((item) => {
 
                                                     const { id, name, vote_count } = item;
 
@@ -195,4 +192,4 @@ const Vote: FC<{ params: { voteId: string } }> = ({ params }) => {
     )
 }
 
-export default Vote;
+export default VotesPage;

@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
-import { setMassage, cleanMassage, updateVote } from "@/redux/features/vote";
+import { cleanMassage, updateVote } from "@/redux/features/vote";
 
 
 type FormValues = {
@@ -160,6 +160,6 @@ export default function Vote({ params }: { params: { voteId: string } }) {
     );
 }
 
-const inputField: React.FC<any> = ({ field, form, ...props }) => (
+const inputField: React.FC<any> = ({ field,  ...props }) => (
     <input {...field} {...props} value={props.value} className="p-1 self-center w-full bg-slate-300" />
 );

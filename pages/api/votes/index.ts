@@ -16,16 +16,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
 
     case 'POST':
+
       createVote(req, res);
       break;
 
     default:
-      break;
-  };
+      return res.status(404).json({ message: 'not found.' });
+  }
 
-};
+}
 
 async function getAllVotes(req: NextApiRequest, res: NextApiResponse) {
+
   try {
     const data = await prisma.vote.findMany({
       include: {
@@ -50,11 +52,11 @@ async function getAllVotes(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).send('Vote not found.');
     }
   } catch (err) {
-    console.error(err)
-    return res.status(500).json({ msg: 'Something went wrong' })
-
+    return res.status(500).json({ message: 'Something went wrong' })
+  } finally {
+    await prisma.$disconnect();
   }
-};
+}
 
 async function getFilteredVotes(req: NextApiRequest, res: NextApiResponse) {
   const { limit, target, sorted } = req.query;
@@ -73,10 +75,11 @@ async function getFilteredVotes(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json(votes);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ msg: 'Something went wrong' });
+    return res.status(500).send({message:err});
+  } finally {
+    await prisma.$disconnect();
   }
-};
+}
 
 async function createVote(req: NextApiRequest, res: NextApiResponse) {
 
@@ -108,10 +111,12 @@ async function createVote(req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
+    if (vote) {
+      return res.status(200).send({message:'Create successfully.'});
+    }
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).send('Something went wrong');
+    return res.status(500).send({message:err});
   } finally {
     await prisma.$disconnect();
   }

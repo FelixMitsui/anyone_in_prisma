@@ -19,7 +19,7 @@ const VoteList: FC<VoteProps> = ({ votes }) => {
 
     const { vote_info } = useSelector((state: RootState) => state.userReducer?.value);
 
-    const { data: session, status } = useSession();
+    const { status } = useSession();
 
     const voteList = votes && votes.map(vote => (
 
