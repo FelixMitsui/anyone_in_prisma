@@ -73,7 +73,7 @@ const Header = () => {
             }
         }
         handleSignIn();
-    }, [session, auth, dispatch]);
+    }, [session, auth, user_id,dispatch]);
 
    
     useEffect(() => {

@@ -5,7 +5,7 @@ type InitialState = {
     message: string;
 }
 type User = {
-    id: number;
+    id: number|null;
     auth: number;
     emails: Array<{ address: string }>;
     vote_info: Array<{ vote_id: number }>;
@@ -14,7 +14,7 @@ type User = {
 const initialState = {
     message:'',
     value: {
-        id: 0,
+        id: null,
         auth: 0,
         emails: [],
         vote_info: []

@@ -60,7 +60,7 @@ export default function Manage() {
   };
 
   useEffect(() => {
-    if (!(auth && auth & 1)) {
+    if (!(auth & 1)) {
       router.push('/');
     }
   }, [auth,router])
