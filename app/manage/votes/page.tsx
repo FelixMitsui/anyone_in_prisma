@@ -52,7 +52,7 @@ const Votes = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (!(auth & 1)) {
+    if (auth&&!(auth & 1)) {
       router.push('/');
     }
   }, [auth, router])
@@ -108,7 +108,17 @@ const Votes = () => {
             </tr>
           </thead>
           <tbody>
-            {votes?votes.map((vote) => (
+            {!votes[0]?.title ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+              <tr key={item}>
+                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-14"></div></td>
+                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
+                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
+                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
+                <td className='border-2 border-slate-500 px-2 text-2xl p-1 '>
+                  <div className="p-2 bg-slate-300 h-8 w-32"></div>
+                </td>
+              </tr>
+            )) : votes.map((vote) => (
               <tr key={vote.id}>
                 <td className='border-2 border-slate-500 px-2 text-2xl'>{vote.id}</td>
                 <td className='border-2 border-slate-500 px-2 text-2xl'>{vote.title}</td>
@@ -117,16 +127,6 @@ const Votes = () => {
                 <td className='border-2 border-slate-500 px-2 text-2xl p-1'>
                   <Link href={`/manage/votes/${vote.id}`}><button type="button" className="mr-1 p-1 bg-orange-400 rounded">Modify</button></Link>
                   <button type="button" className="p-1 text-white bg-red-500 rounded" onClick={() => handleConfirmModal(vote.id)}>Delete</button>
-                </td>
-              </tr>
-            )) : [1,2,3,4,5,6,7,8].map((_,index) => (
-              <tr key={index}>
-                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-14"></div></td>
-                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
-                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
-                <td className='border-2 border-slate-500 px-2 text-2xl '><div className="p-3 bg-slate-300 h-8 w-32"></div></td>
-                <td className='border-2 border-slate-500 px-2 text-2xl p-1 '>
-                <div className="p-2 bg-slate-300 h-8 w-32"></div>
                 </td>
               </tr>
             ))}

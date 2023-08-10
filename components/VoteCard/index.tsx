@@ -37,7 +37,7 @@ const VoteCard: FC<VoteCardProps> = ({ vote, vote_info, status }) => {
     return (
         <article className="p-5 me-3 pb-2 bg-slate-200 shadow-md flex flex-col">
             <h2 className="text-2xl font-bold">{title}</h2>
-            <p className="text-xl">Closing date:{remainingMinutes <= 0 ? <span className="ml-2 text-red-500">ended</span> : <span className="ms-2">{remainingDays <= 0 ? null : `${remainingDays} Day`} {remainingHours <= 0 ? null : `${remainingHours} Hour`} {remainingMinutes <= 0 ? null : `${remainingMinutes} Min`}</span>}</p>
+            <p className="text-xl">Closing date:{remainingMinutes <= 0 ? <span className="ml-2 text-red-500">ended</span> : <span className="ml-2">{remainingDays <= 0 ? null : `${remainingDays} Day`} {remainingHours <= 0 ? null : `${remainingHours} Hour`} {remainingMinutes <= 0 ? null : `${remainingMinutes} Min`}</span>}</p>
             <p className="text-xl">Total vote:<span className="ml-2">{vote_total}</span></p>
             <button
                 type="button"
